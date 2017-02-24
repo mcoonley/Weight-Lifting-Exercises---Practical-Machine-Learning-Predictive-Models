@@ -1,0 +1,89 @@
+---
+title: "Practical Machine Learning Final Assignment"
+author: "Mari Coonley"
+date: "February 24, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## BACKGROUND
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
+
+Six young health participants were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in five different fashions: exactly according to the specification (Class A), throwing the elbows to the front (Class B), lifting the dumbbell only halfway (Class C), lowering the dumbbell only halfway (Class D) and throwing the hips to the front (Class E).
+
+## DATA
+
+Load data.
+
+```{r weight lifting exercise}
+training<-read.csv("./pml-training.csv", na.strings = c("NA",""))
+testing<-read.csv("./pml-testing.csv", na.strings = c("NA",""))
+```
+
+Clean and organize data by removing variables with NAs as well as omitting non essential information in the first seven variables. 
+```{r clean data}
+WLEtrain<-training[,colSums(is.na(training))== 0]
+WLEtest<-testing[,colSums(is.na(testing))== 0]
+WLEtrain<-WLEtrain[,-c(1:7)]
+WLEtest<-WLEtest[,-c(1:7)]
+```
+
+Split WLEtrain data set into two subsets, one training and one validation.
+```{r split data}
+## load requisite packages for all models
+library(caret); library(gbm); 
+library(randomForest);library(plyr)
+## data split
+set.seed(12354)
+inTrain<-createDataPartition(WLEtrain$classe, p = 0.75, list = FALSE)
+training<-WLEtrain[inTrain,]
+validation<-WLEtrain[-inTrain,]
+```
+
+## CREATE MODELS
+
+Two prediction models were initially chosen to compare accuracy.  These two models were then stacked to see if accuracy could be improved further. The two prediction models chosen were Generalized boosted regression models (gbm or "boosted trees") and Random Forest (rf).
+
+Generalized boosted regression models was run first. 
+
+```{r gbm, cache = TRUE}
+## create control argument for all models
+control <- trainControl(method="cv", number=3)
+## run gbm
+mod_gbm<-train(classe~., data = training, method = "gbm", trControl = control, verbose = FALSE)
+print(mod_gbm)
+pred_gbm<-predict(mod_gbm, validation)
+confusionMatrix(pred_gbm, validation$classe)
+```
+
+Next, the random forest model was run.
+```{r rf, cache = TRUE}
+control <- trainControl(method="cv", number=3)
+mod_rf<-train(classe~., data = training, method = "rf", trControl = control)
+print(mod_rf)
+pred_rf<-predict(mod_rf, validation)
+confusionMatrix(pred_rf, validation$classe)
+```
+
+Accuracies are 96.6% and 99.4% respectively.  Both are acceptably accurate.  BUT just for curiosity sake, a stacked model was run to see if accuracy could be improved further.
+
+```{r stacked}
+predDf<-data.frame(pred_rf, pred_gbm, classe = validation$classe)
+combMod<-train(classe~., method="rf",data = predDf, trainControl = control)
+combPred<-predict(combMod, predDf)
+confusionMatrix(combPred, validation$classe)
+```
+Note accuracy for the stacked model is the same as that for random forest.  Therefore, the random forest model prediction will be used to run on the test data set.
+
+```{test prediction}
+pred_rfTest<-predict(mod_rf, WLEtest)
+print(pred_rfTest)
+```
+When these results are entered into the Course Prediction Quiz, 20/20 were correct.  Therefore it is safe to assume the random forest predictive model is fairly accurate. 
+
+## CITATION
+Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13) . Stuttgart, Germany: ACM SIGCHI, 2013.
