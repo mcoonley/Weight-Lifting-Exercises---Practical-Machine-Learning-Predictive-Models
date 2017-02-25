@@ -127,7 +127,7 @@ $(document).ready(function () {
 <div id="background" class="section level2">
 <h2>BACKGROUND</h2>
 <p>Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: <a href="http://groupware.les.inf.puc-rio.br/har" class="uri">http://groupware.les.inf.puc-rio.br/har</a> (see the section on the Weight Lifting Exercise Dataset).</p>
-<p>Six young health participants were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in five different fashions: exactly according to the specification (Class A), throwing the elbows to the front (Class B), lifting the dumbbell only halfway (Class C), lowering the dumbbell only halfway (Class D) and throwing the hips to the front (Class E).</p>
+<p>Six young health participants were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl in five different fashions: exactly according to the specification (Class A), throwing the elbows to the front (Class B), lifting the dumbbell only halfway (Class C), lowering the dumbbell only halfway (Class D) and throwing the hips to the front (Class E). The goal of this exercise is to predict activity goals from activity monitors in the test data set as accurately as possible.</p>
 </div>
 <div id="data" class="section level2">
 <h2>DATA</h2>
@@ -169,7 +169,7 @@ validation&lt;-WLEtrain[-inTrain,]</code></pre>
 </div>
 <div id="create-models" class="section level2">
 <h2>CREATE MODELS</h2>
-<p>Two prediction models were initially chosen to compare accuracy. These two models were then stacked to see if accuracy could be improved further. The two prediction models chosen were Generalized boosted regression models (gbm or “boosted trees”) and Random Forest (rf).</p>
+<p>Two prediction models were initially chosen to compare accuracy. These two models were then stacked to see if accuracy could be improved further. The two prediction models chosen were Generalized boosted regression models (gbm or “boosted trees”) and Random Forest (rf). GMB using boosting weights possibly weak predictors together to create stronger predictors. For example, the x, y, &amp; z variables for each individual sensors acceleration, gyroscope and magnetometer. Random forest was chosen because this is a complicated model and random forest is designed for complicated models and is a extension of bagging for classification and regression trees. Finally stacking or ensemble predictors was chosen to using random forest to see if accuracies could be further improved combining the two previous models.</p>
 <p>Generalized boosted regression models was run first.</p>
 <pre class="r"><code>## create control argument for all models
 control &lt;- trainControl(method=&quot;cv&quot;, number=3)
