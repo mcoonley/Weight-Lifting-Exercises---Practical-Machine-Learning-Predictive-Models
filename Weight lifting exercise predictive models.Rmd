@@ -81,9 +81,9 @@ confusionMatrix(combPred, validation$classe)
 ```
 Note accuracy for the stacked model is the same as that for random forest.  Therefore, the random forest model prediction will be used to run on the test data set.
 
-```{test prediction}
+```{r test prediction}
 pred_rfTest<-predict(mod_rf, WLEtest)
-print(pred_rfTest)
+pred_rfTest
 ```
 When these results are entered into the Course Prediction Quiz, 20/20 were correct.  Therefore it is safe to assume the random forest predictive model is fairly accurate. 
 

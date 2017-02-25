@@ -330,8 +330,10 @@ confusionMatrix(combPred, validation$classe)</code></pre>
 ## Detection Prevalence   0.2851   0.1925   0.1772   0.1619   0.1833
 ## Balanced Accuracy      0.9986   0.9961   0.9954   0.9908   0.9982</code></pre>
 <p>Note accuracy for the stacked model is the same as that for random forest. Therefore, the random forest model prediction will be used to run on the test data set.</p>
-<pre class="test"><code>pred_rfTest&lt;-predict(mod_rf, WLEtest)
-print(pred_rfTest)</code></pre>
+<pre class="r"><code>pred_rfTest&lt;-predict(mod_rf, WLEtest)
+pred_rfTest</code></pre>
+<pre><code>##  [1] B A B A A E D B A A B C B A E E A B B B
+## Levels: A B C D E</code></pre>
 <p>When these results are entered into the Course Prediction Quiz, 20/20 were correct. Therefore it is safe to assume the random forest predictive model is fairly accurate.</p>
 </div>
 <div id="citation" class="section level2">
