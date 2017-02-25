@@ -50,6 +50,8 @@ Two prediction models were initially chosen to compare accuracy.  These two mode
 
 Generalized boosted regression models was run first. 
 
+Note the creation of a control parameters for the trControl argument in the train function.  Cross validation is chosen as the method and to reduce computation time, the number of folds is three.  The default number of folds is ten, however, reducing the folds to three doesn't have any significant impact on accuracy as is displayed in the confusion matrix print out. 
+
 ```{r gbm, cache = TRUE}
 ## create control argument for all models
 control <- trainControl(method="cv", number=3)
