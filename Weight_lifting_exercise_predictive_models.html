@@ -171,6 +171,7 @@ validation&lt;-WLEtrain[-inTrain,]</code></pre>
 <h2>CREATE MODELS</h2>
 <p>Two prediction models were initially chosen to compare accuracy. These two models were then stacked to see if accuracy could be improved further. The two prediction models chosen were Generalized boosted regression models (gbm or “boosted trees”) and Random Forest (rf). GMB using boosting weights possibly weak predictors together to create stronger predictors. For example, the x, y, &amp; z variables for each individual sensors acceleration, gyroscope and magnetometer. Random forest was chosen because this is a complicated model and random forest is designed for complicated models and is a extension of bagging for classification and regression trees. Finally stacking or ensemble predictors was chosen to using random forest to see if accuracies could be further improved combining the two previous models.</p>
 <p>Generalized boosted regression models was run first.</p>
+<p>Note the creation of a control parameters for the trControl argument in the train function. Cross validation is chosen as the method and to reduce computation time, the number of folds is three. The default number of folds is ten, however, reducing the folds to three doesn’t have any significant impact on accuracy as is displayed in the confusion matrix print out.</p>
 <pre class="r"><code>## create control argument for all models
 control &lt;- trainControl(method=&quot;cv&quot;, number=3)
 ## run gbm
